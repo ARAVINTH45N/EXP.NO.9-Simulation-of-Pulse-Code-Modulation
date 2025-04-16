@@ -28,24 +28,18 @@ python
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Parameters
 sampling_rate = 5000  # Sampling rate (samples per second)
 duration = 0.1  # Duration of the signal in seconds
 quantization_levels = 16  # Number of quantization levels (PCM resolution)
 clock_frequency = 200  # Clock signal frequency
-
-# Message signal 1 parameters
 frequency1 = 50  # Frequency of message signal 1
 message_signal1_amplitude = 1.0 # Amplitude of message signal 1
 
-# Message signal 2 parameters
 frequency2 = 100  # Frequency of message signal 2
 message_signal2_amplitude = 0.8 # Amplitude of message signal 2
 
-# Generate time vector
 t = np.linspace(0, duration, int(sampling_rate * duration), endpoint=False)
 
-# Generate message signals
 message_signal1 = message_signal1_amplitude * np.sin(2 * np.pi * frequency1 * t)
 message_signal2 = message_signal2_amplitude * np.sin(2 * np.pi * frequency2 * t)
 
@@ -60,14 +54,12 @@ quantized_signal1 = np.round(message_signal1 / quantization_step1) * quantizatio
 quantization_step2 = (max(message_signal2) - min(message_signal2)) / quantization_levels
 quantized_signal2 = np.round(message_signal2 / quantization_step2) * quantization_step2
 
-# Simulate PCM modulated signals
 pcm_signal1 = (quantized_signal1 - min(quantized_signal1)) / quantization_step1
 pcm_signal1 = pcm_signal1.astype(int)
 
 pcm_signal2 = (quantized_signal2 - min(quantized_signal2)) / quantization_step2
 pcm_signal2 = pcm_signal2.astype(int)
 
-# Multiplexing (simple time-division multiplexing)
 multiplexed_signal = np.zeros_like(t)
 for i in range(len(t)):
     if i % 2 == 0:
@@ -75,10 +67,8 @@ for i in range(len(t)):
     else:
         multiplexed_signal[i] = quantized_signal2[i]
 
-# Plotting the results
 plt.figure(figsize=(14, 12))
 
-# Plot message signal 1
 plt.subplot(5, 1, 1)
 plt.plot(t, message_signal1, label="Message Signal 1 (Analog, 50Hz)", color='blue')
 plt.title("Message Signal 1 (Analog, 50Hz)")
@@ -86,7 +76,6 @@ plt.xlabel("Time [s]")
 plt.ylabel("Amplitude")
 plt.grid(True)
 
-# Plot message signal 2
 plt.subplot(5, 1, 2)
 plt.plot(t, message_signal2, label="Message Signal 2 (Analog, 100Hz)", color='green')
 plt.title("Message Signal 2 (Analog, 100Hz)")
@@ -94,7 +83,6 @@ plt.xlabel("Time [s]")
 plt.ylabel("Amplitude")
 plt.grid(True)
 
-# Plot clock signal
 plt.subplot(5, 1, 3)
 plt.plot(t, clock_signal, label="Clock Signal (200Hz)", color='purple')
 plt.title("Clock Signal (200Hz)")
@@ -102,7 +90,6 @@ plt.xlabel("Time [s]")
 plt.ylabel("Amplitude")
 plt.grid(True)
 
-# Plot quantized signals
 plt.subplot(5, 1, 4)
 plt.step(t, quantized_signal1, label="Quantized Signal 1", color='red', where='post')
 plt.step(t, quantized_signal2, label="Quantized Signal 2", color='orange', where='post')
@@ -112,7 +99,6 @@ plt.ylabel("Amplitude")
 plt.grid(True)
 plt.legend()
 
-# Plot Multiplexed Signal
 plt.subplot(5,1,5)
 plt.step(t, multiplexed_signal, label = "Multiplexed Signal", color = 'black', where='post')
 plt.title("Multiplexed Signal")
